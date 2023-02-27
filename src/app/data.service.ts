@@ -1,37 +1,37 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import axios from "axios";
 import { BehaviorSubject } from "rxjs";
+
+interface jobs {
+    company_name: string;
+    id: string;
+    job_description: string;
+    job_title: string;
+}
+
+interface obj {
+    status: string
+    jobs: jobs[]
+}
 
 @Injectable({
     providedIn: 'root'
 })
 export class dataService {
+    list !: jobs[]
     postUrl: string = 'https://kudoswall.com/jobsapi/get_all_job_posts/'
-    constructor() {
+    constructor(private http: HttpClient) {
 
     }
 
-    Request() {
-        return axios.post(this.postUrl, {
-            "page": "1"
+    getJobList(page: number) {
+        this.Request(page)
+        return this.list
+    }
+    Request(page: number) {
+        this.http.post<obj>(this.postUrl, { "page": page }).subscribe((data) => {
+            this.list = data.jobs
         })
-            .then(function (response) {
-                console.log(response.data.jobs)
-                return response.data.jobs
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
     }
 }
 
-// getJobsRequest() {
-//     /** POST: add a new hero to the database */
-//     const header = new HttpHeaders({
-//         "page": "1"
-//     })
-//      this.http.post<obj>(this.postUrl, { page: '1' }).subscribe((data) => {
-//         return data.jobs
-//     })
-
-// }

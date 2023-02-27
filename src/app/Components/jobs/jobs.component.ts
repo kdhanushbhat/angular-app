@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { dataService } from 'src/app/data.service';
 
@@ -8,6 +9,11 @@ interface jobObj {
   job_title: string;
 }
 
+interface obj {
+  status: string
+  jobs: jobObj[]
+}
+
 @Component({
   selector: 'app-jobs',
   templateUrl: './jobs.component.html',
@@ -16,15 +22,42 @@ interface jobObj {
 export class JobsComponent implements OnInit {
 
   objList !: jobObj[]
+  pageNumber: number = 0
+  dataAvailable: boolean = false
+  postUrl: string = 'https://kudoswall.com/jobsapi/get_all_job_posts/'
 
-  constructor(private service: dataService) {
+  constructor(private http: HttpClient) {
+
   }
 
   ngOnInit(): void {
+    this.Request()
 
-    this.service.Request().then((x) => {
-      this.objList = x
+
+  }
+
+  descriptionInit() {
+    console.log(this.objList)
+    for (let i in this.objList) {
+      let id = 'job-description-' + i
+      console.log(id, this.objList[i].job_description)
+      document.getElementById(id)!.innerHTML = this.objList[i].job_description
+    }
+  }
+
+  btnClick(num: number) {
+    this.pageNumber = num
+    this.Request()
+  }
+
+  Request() {
+    this.http.post<obj>(this.postUrl, { "page": this.pageNumber }).subscribe((data) => {
+      this.objList = data.jobs
+      this.dataAvailable = true
+      this.descriptionInit()
     })
   }
+
+
 
 }
