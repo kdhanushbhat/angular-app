@@ -32,18 +32,16 @@ export class JobsComponent implements OnInit {
 
   ngOnInit(): void {
     this.Request()
-
-
   }
 
-  descriptionInit() {
-    console.log(this.objList)
-    for (let i in this.objList) {
-      let id = 'job-description-' + i
-      console.log(id, this.objList[i].job_description)
-      document.getElementById(id)!.innerHTML = this.objList[i].job_description
-    }
-  }
+  // descriptionInit() {
+  //   console.log(this.objList)
+  //   for (let i in this.objList) {
+  //     let id = 'job-description-' + i
+  //     console.log(id, this.objList[i].job_description)
+  //     document.getElementById(id)!.innerHTML = this.objList[i].job_description
+  //   }
+  // }
 
   btnClick(num: number) {
     this.pageNumber = num
@@ -54,7 +52,6 @@ export class JobsComponent implements OnInit {
     this.http.post<obj>(this.postUrl, { "page": this.pageNumber }).subscribe((data) => {
       this.objList = data.jobs
       this.dataAvailable = true
-      this.descriptionInit()
     })
   }
 

@@ -11,8 +11,7 @@ export class AppComponent {
 
   title = "Item-app"
 
-  constructor(private service: dataService) {
-    service.Request(0)
+  constructor() {
   }
   // additem(item: Item) {
   //   console.log("parent", item);
